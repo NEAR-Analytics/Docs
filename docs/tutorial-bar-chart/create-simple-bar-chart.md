@@ -2,8 +2,9 @@
 sidebar_position: 1
 ---
 
-# Create a Simple Bar Chart
+# Build a Simple Bar Chart
 
+![SimpleChart](../../static/img/chart_examples/simple-bar-chart.png)
 
 
 This tutorial will guide you through creating a widget using the `BarEl` built-in component to display a bar chart. This widget fetches data from an API and visualizes it in a stacked bar chart format. We'll break down the example code into several steps for clarity.
@@ -30,6 +31,10 @@ After fetching the data, you're processing it to be used in the chart:
 2. **Data Mapping:** You're mapping the `COMMITS_COUNT` from the data to a new object `COMMITS_COUNT` and extracting dates.
 
 ```javascript
+
+
+const data = raw_data.body || [];
+
 const sortedData = data.sort((a, b) => {
   return new Date(a["FULL_DATE"]) - new Date(b["FULL_DATE"]);
 });
@@ -47,8 +52,39 @@ const dates = data.map((entry) => entry["FULL_DATE"]);
 You're defining the options for the bar chart (`stacked_options`) and the data structure for the chart (`stacked_bar_data`). These include aspects like axis color, gridline color, and the dataset for the chart.
 
 ```javascript
+
+let Style = styled.div`
+                `;
+
 const stacked_options = {
-  // Chart options...
+  maintainAspectRatio: true,
+  plugins: {
+    legend: {
+      display: true,
+      position: "bottom",
+    },
+  },
+  scales: {
+    y: {
+      stacked: true,
+      grid: {
+        color: "rgb(41,51,64)", // This will change the gridline color
+        borderColor: "rgb(240,255,240)",
+      },
+      ticks: {
+        color: "rgb(240,255,240)", // This will change the axis text label color
+      },
+    },
+    x: {
+      stacked: true,
+      grid: {
+        color: "rgb(41,51,64)", // This will change the gridline color
+      },
+      ticks: {
+        color: "rgb(240,255,240)", // This will change the axis text label color
+      },
+    },
+  },
 };
 
 const stacked_bar_data = {
@@ -73,7 +109,9 @@ return (
     <div className="text-bg-dark container">
       {data !== null ? (
         <div className="rounded-4 p-3 mb-4">
-          <BarEl options={stacked_options} data={stacked_bar_data} />
+          <div className="">
+            <BarEl options={stacked_options} data={stacked_bar_data} />
+          </div>
         </div>
       ) : (
         <div>Loading ...</div>
